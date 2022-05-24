@@ -11,7 +11,7 @@ ON_OFF_PIN = 23  # Tell arduino if lights should be on or off
 def setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(THUNDERSTORM_GPIO_PIN, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(ON_OFF_PIN, GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(ON_OFF_PIN, GPIO.OUT, initial=GPIO.LOW)
     
     atexit.register(exit_handler)
 
@@ -19,10 +19,10 @@ def indicate_thunderstorm():
     GPIO.output(THUNDERSTORM_GPIO_PIN, GPIO.HIGH)
 
 def indicate_off():
-    GPIO.output(ON_OFF_PIN, GPIO.LOW)
+    GPIO.output(ON_OFF_PIN, GPIO.HIGH)
 
 def indicate_on():
-    GPIO.output(ON_OFF_PIN, GPIO.HIGH)
+    GPIO.output(ON_OFF_PIN, GPIO.LOW)
 
 def set_low():
     """Set weather indicators to LOW"""
