@@ -17,9 +17,11 @@
 #define CLOCKPIN   13
 
 #define THUNDER_PI_PIN  9
+#define ON_OFF_PIN  8
 
 // Generally, you should use "unsigned long" for variables that hold time
 // The value will quickly become too large for an int to store
+unsigned long currentMillis = 0;
 unsigned long previousMillis = 0;
 
 // Aims to use all 1000 free weather queries allowed per day
@@ -27,6 +29,7 @@ const long interval = 86400;
 const int initial_brightness = 100;
 
 int storm_state = 0;
+int on_off_state = 0;
 int strip_brightness = 100;
 
 // The last parameter is optional -- this is the color data order of the
@@ -44,33 +47,40 @@ void setup() {
   clock_prescale_set(clock_div_1); // Enable 16 MHz on Trinket
 #endif
   pinMode(THUNDER_PI_PIN, INPUT);  // set thunderstorm indicator pin as input
+  pinMode(ON_OFF_PIN, INPUT);  // set on/off indicator pin as input
   
   strip.begin(); // Initialize pins for output
   strip.setBrightness(initial_brightness);
   strip.show();  // Turn all LEDs off ASAP
 
-  set_strip_color(strip.Color(0, 255, 0));
-  storm_state = digitalRead(THUNDER_PI_PIN);
+  on_off_state = digitalRead(ON_OFF_PIN);
 
-  //Serial.begin(9600);
+  if (on_off_state == LOW) {  // LOW means lights should be on
+    set_strip_color(strip.Color(0, 255, 0));
+    storm_state = digitalRead(THUNDER_PI_PIN);
+  }
 }
 
 void loop() {
-  unsigned long currentMillis = millis();
-
-  if (currentMillis - previousMillis >= interval) {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-
-    storm_state = digitalRead(THUNDER_PI_PIN);
-  }
+  on_off_state = digitalRead(ON_OFF_PIN);
   
-  if (storm_state == HIGH) {
-    thunderstorm();
-  } else {
-    // Back to normal
-    strip.setBrightness(initial_brightness);
-    set_strip_color(strip.Color(0, 255, 0));
+  if (on_off_state == LOW) {  // LOW means lights should be on
+    currentMillis = millis();
+  
+    if (currentMillis - previousMillis >= interval) {
+      // save the last time you blinked the LED
+      previousMillis = currentMillis;
+  
+      storm_state = digitalRead(THUNDER_PI_PIN);
+    }
+    
+    if (storm_state == HIGH) {
+      thunderstorm();
+    } else {
+      // Back to normal
+      strip.setBrightness(initial_brightness);
+      set_strip_color(strip.Color(0, 255, 0));
+    }
   }
 }
 
