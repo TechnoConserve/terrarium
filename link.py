@@ -1,5 +1,6 @@
 # Communicate with the arduino controlling the lights using the GPIO pins
 import atexit
+import logging
 try:
     import RPi.GPIO as GPIO
 except RuntimeError:
@@ -7,6 +8,9 @@ except RuntimeError:
 
 THUNDERSTORM_GPIO_PIN = 16
 ON_OFF_PIN = 23  # Tell arduino if lights should be on or off
+
+logger = logging.getLogger(__name__)
+
 
 def setup():
     GPIO.setmode(GPIO.BCM)
@@ -16,12 +20,17 @@ def setup():
     atexit.register(exit_handler)
 
 def indicate_thunderstorm():
+    logger.debug(f'Setting pin {THUNDERSTORM_GPIO_PIN} to HIGH')
     GPIO.output(THUNDERSTORM_GPIO_PIN, GPIO.HIGH)
 
 def indicate_off():
+    logger.debug('Indicating off...')
+    logger.debug(f'Setting pin {ON_OFF_PIN} to HIGH')
     GPIO.output(ON_OFF_PIN, GPIO.HIGH)
 
 def indicate_on():
+    logger.debug('Indicating on...')
+    logger.debug(f'Setting pin {ON_OFF_PIN} to LOW')
     GPIO.output(ON_OFF_PIN, GPIO.LOW)
 
 def set_low():
