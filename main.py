@@ -11,7 +11,7 @@ logging.basicConfig(
     filename='terrarium_main.log', 
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%m/%d/%Y %I:%M:%S %p'
+    datefmt='%m/%d/%Y %I:%M:%S %p %Z'
     )
 
 logger = logging.getLogger(__name__)
