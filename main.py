@@ -32,7 +32,7 @@ def main():
 
     # If daytime, do the things
     if not in_between(now=current_time, start=dt.time(23), end=dt.time(7, 30)):
-        logger.debug('It is nighttime.')
+        logger.debug('It is daytime.')
         indicate_on()
         current = get_current_condition()
 
@@ -46,7 +46,7 @@ def main():
             indicate_thunderstorm()
 
     else:
-        logger.debug('It is daytime.')
+        logger.debug('It is nighttime.')
         # Tell arduino the lights should be off
         indicate_off()
 
